@@ -76,7 +76,6 @@ A responsive, accessible web application for tracking student expenses with powe
 finance-tracker/
 ├── index.html              # Main HTML file
 ├── tests.html              # Regex validation tests
-├── seed.json               # Sample data (12 transactions)
 ├── README.md               # This file
 ├── styles/
 │   └── main.css            # Responsive styles
@@ -87,7 +86,7 @@ finance-tracker/
 │   ├── validators.js       # Regex validation functions
 │   ├── search.js           # Search & highlight utilities
 │   └── ui.js               # DOM rendering functions
-└── assets/                 # (Optional images/icons)
+├── seed.json               # Sample data (12 transactions)
 ```
 
 ##  Getting Started
@@ -96,7 +95,7 @@ finance-tracker/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Achok-kot/Student_Finance_Tracker.git
+   git clone https://github.com/Achok-kot/finance_tracker.git
    cd Student_Finance_Tracker
    ```
 
