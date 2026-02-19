@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Finance Tracker</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  
+  <header>
+    <h1> Student Finance Tracker</h1>
+    <nav>
+      <button id="nav-dashboard" class="nav-btn active" aria-current="page">Dashboard</button>
+      <button id="nav-transactions" class="nav-btn">Transactions</button>
+      <button id="nav-add" class="nav-btn">Add</button>
+      <button id="nav-settings" class="nav-btn">Settings</button>
+      <button id="nav-about" class="nav-btn">About</button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- Dashboard Section -->
+    <section id="section-dashboard" class="page-section active">
+      <h2>Dashboard</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Transactions</h3>
+          <p id="stat-total" class="stat-value">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Spent</h3>
+          <p id="stat-spent" class="stat-value">$0.00</p>
+        </div>
+        <div class="stat-card">
+          <h3>Top Category</h3>
+          <p id="stat-category" class="stat-value">—</p>
+        </div>
+        <div class="stat-card">
+          <h3>Last 7 Days</h3>
+          <p id="stat-week" class="stat-value">$0.00</p>
+        </div>
+      </div>
+      
+      <div class="budget-cap">
+        <h3>Monthly Budget</h3>
+        <div class="cap-display">
+          <div id="cap-bar" class="cap-bar"></div>
+        </div>
+        <p id="cap-message" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- Transactions Section -->
+    <section id="section-transactions" class="page-section">
+      <h2>Transactions</h2>
+      
+      <div class="controls">
+        <div class="search-box">
+          <label for="search-input">Search (regex):</label>
+          <input type="text" id="search-input" placeholder="e.g., coffee|tea">
+          <label>
+            <input type="checkbox" id="search-case"> Case sensitive
+          </label>
+        </div>
+        
+        <div class="sort-controls">
+          <label for="sort-select">Sort by:</label>
+          <select id="sort-select">
+            <option value="date-desc">Date (newest)</option>
+            <option value="date-asc">Date (oldest)</option>
+            <option value="amount-desc">Amount (high-low)</option>
+            <option value="amount-asc">Amount (low-high)</option>
+            <option value="desc-asc">Description (A-Z)</option>
+            <option value="desc-desc">Description (Z-A)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="transactions-container"></div>
+    </section>
+
+    <!-- Add/Edit Section -->
+    <section id="section-add" class="page-section">
+      <h2 id="form-title">Add Transaction</h2>
+      
+      <form id="transaction-form" novalidate>
+        <input type="hidden" id="edit-id">
+        
+        <div class="form-group">
+          <label for="input-description">Description *</label>
+          <input type="text" id="input-description" required>
+          <span class="error" id="error-description" role="alert"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="input-amount">Amount *</label>
+          <input type="text" id="input-amount" required>
+          <span class="error" id="error-amount" role="alert"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="input-category">Category *</label>
+          <select id="input-category" required>
+            <option value="">Select category</option>
+          </select>
+          <span class="error" id="error-category" role="alert"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="input-date">Date *</label>
+          <input type="text" id="input-date" placeholder="YYYY-MM-DD" required>
+          <span class="error" id="error-date" role="alert"></span>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Save</button>
+          <button type="button" id="btn-cancel" class="btn-secondary">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Settings Section -->
+    <section id="section-settings" class="page-section">
+      <h2>Settings</h2>
+      
+      <div class="settings-group">
+        <h3>Currency</h3>
+        <label for="currency-select">Base Currency:</label>
+        <select id="currency-select">
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+        </select>
+      </div>
+
+      <div class="settings-group">
+        <h3>Exchange Rates</h3>
+        <div class="rate-input">
+          <label for="rate-eur">EUR to USD:</label>
+          <input type="number" id="rate-eur" step="0.01" value="1.09">
+        </div>
+        <div class="rate-input">
+          <label for="rate-gbp">GBP to USD:</label>
+          <input type="number" id="rate-gbp" step="0.01" value="1.27">
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3>Monthly Budget Cap</h3>
+        <label for="budget-cap">Amount ($):</label>
+        <input type="number" id="budget-cap" step="0.01" value="500">
+      </div>
+
+      <div class="settings-group">
+        <h3>Categories</h3>
+        <div id="categories-list"></div>
+        <div class="add-category">
+          <input type="text" id="new-category" placeholder="New category">
+          <button id="btn-add-category">Add</button>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3>Data Management</h3>
+        <button id="btn-export" class="btn-secondary">Export JSON</button>
+        <label for="file-import" class="btn-secondary">Import JSON
+          <input type="file" id="file-import" accept=".json" style="display:none">
+        </label>
+        <button id="btn-clear" class="btn-danger">Clear All Data</button>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="section-about" class="page-section">
+      <h2>About</h2>
+      <p>Student Finance Tracker helps you manage your expenses with powerful search, validation, and reporting features.</p>
+      
+      <h3>Features</h3>
+      <ul>
+        <li>Track transactions with categories</li>
+        <li>Regex-powered search and validation</li>
+        <li>Multi-currency support</li>
+        <li>Budget cap monitoring</li>
+        <li>Import/Export data</li>
+        <li>Fully accessible and responsive</li>
+      </ul>
+
+      <h3>Contact</h3>
+      <p>GitHub: <a href="https://github.com/yourusername">Achok-kot</a></p>
+      <p>Email: <a href="mailto:your.email@example.com">p.kot@alustudent.com</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Student Finance Tracker</p>
+  </footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="scripts/app.js"></script>
+</body>
+</html>
