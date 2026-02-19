@@ -95,7 +95,7 @@ finance-tracker/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Achok-kot/finance_tracker.git
+   git clone https://github.com/Achok-kot/finance_tracker.git  
    cd Student_Finance_Tracker
    ```
 
@@ -157,6 +157,10 @@ Each transaction follows this structure:
 - [x] M5: Stats + Cap/Targets
 - [x] M6: Persistence + Import/Export + Settings
 - [x] M7: Polish & A11y Audit
+
+## Pages
+
+  - **GitHub pages**:   https://achok-kot.github.io/finance-tracker
 
 ##  Contact
 
