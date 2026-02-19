@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regex Tests - Finance Tracker</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 { color: #2563eb; }
+    .test { 
+      margin: 1rem 0;
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+    }
+    .pass { background: #d1fae5; }
+    .fail { background: #fee2e2; }
+    .pattern { 
+      background: #f1f5f9;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Regex Validation Tests</h1>
+  <div id="results"></div>
+
+  <script type="module">
+    import { validateDescription, validateAmount, validateDate, validateCategory, PATTERNS } from './scripts/validators.js';
+
+    const tests = [
+      // Description tests
+      { name: 'Description: Valid', fn: () => validateDescription('Lunch at cafeteria'), expect: '' },
+      { name: 'Description: Leading space', fn: () => validateDescription(' Lunch'), expect: 'No leading/trailing spaces allowed' },
+      { name: 'Description: Trailing space', fn: () => validateDescription('Lunch '), expect: 'No leading/trailing spaces allowed' },
+      { name: 'Description: Duplicate word', fn: () => validateDescription('Coffee coffee'), expect: 'Duplicate words detected' },
+      { name: 'Description: Empty', fn: () => validateDescription(''), expect: 'Description is required' },
+      
+      // Amount tests
+      { name: 'Amount: Valid decimal', fn: () => validateAmount('12.50'), expect: '' },
+      { name: 'Amount: Valid integer', fn: () => validateAmount('100'), expect: '' },
+      { name: 'Amount: Zero', fn: () => validateAmount('0'), expect: 'Amount must be greater than 0' },
+      { name: 'Amount: Invalid format', fn: () => validateAmount('12.5.0'), expect: 'Invalid amount format (e.g., 12.50)' },
+      { name: 'Amount: Negative', fn: () => validateAmount('-10'), expect: 'Invalid amount format (e.g., 12.50)' },
+      { name: 'Amount: Three decimals', fn: () => validateAmount('12.505'), expect: 'Invalid amount format (e.g., 12.50)' },
+      
+      // Date tests
+      { name: 'Date: Valid', fn: () => validateDate('2025-01-15'), expect: '' },
+      { name: 'Date: Invalid format', fn: () => validateDate('15-01-2025'), expect: 'Invalid date format (YYYY-MM-DD)' },
+      { name: 'Date: Invalid month', fn: () => validateDate('2025-13-01'), expect: 'Invalid date format (YYYY-MM-DD)' },
+      { name: 'Date: Invalid day', fn: () => validateDate('2025-02-30'), expect: 'Invalid date' },
+      { name: 'Date: Empty', fn: () => validateDate(''), expect: 'Date is required' },
+      
+      // Category tests
+      { name: 'Category: Valid single word', fn: () => validateCategory('Food'), expect: '' },
+      { name: 'Category: Empty', fn: () => validateCategory(''), expect: 'Category is required' },
+      
+      // Pattern tests
+      { name: 'Pattern: Cents present', fn: () => /\.\d{2}\b/.test('12.50'), expect: true },
+      { name: 'Pattern: Beverage keyword', fn: () => /(coffee|tea)/i.test('Coffee with friends'), expect: true },
+      { name: 'Pattern: Duplicate word detection', fn: () => /\b(\w+)\s+\1\b/i.test('the the'), expect: true },
+    ];
+
+    const results = document.getElementById('results');
+    let passed = 0;
+    let failed = 0;
+
+    tests.forEach(test => {
+      const result = test.fn();
+      const success = result === test.expect;
+      
+      if (success) passed++;
+      else failed++;
+
+      const div = document.createElement('div');
+      div.className = `test ${success ? 'pass' : 'fail'}`;
+      div.innerHTML = `
+        <strong>${success ? '✓' : '✗'} ${test.name}</strong><br>
+        Expected: <code>${test.expect}</code><br>
+        Got: <code>${result}</code>
+      `;
+      results.appendChild(div);
+    });
+
+    // Display patterns
+    const patternsDiv = document.createElement('div');
+    patternsDiv.innerHTML = `
+      <h2>Regex Patterns Used</h2>
+      <div class="pattern"><strong>Description:</strong> ${PATTERNS.description}</div>
+      <div class="pattern"><strong>Amount:</strong> ${PATTERNS.amount}</div>
+      <div class="pattern"><strong>Date:</strong> ${PATTERNS.date}</div>
+      <div class="pattern"><strong>Category:</strong> ${PATTERNS.category}</div>
+      <div class="pattern"><strong>Duplicate Word:</strong> ${PATTERNS.duplicateWord}</div>
+    `;
+    results.appendChild(patternsDiv);
+
+    // Summary
+    const summary = document.createElement('div');
+    summary.innerHTML = `<h2>Summary: ${passed} passed, ${failed} failed</h2>`;
+    results.insertBefore(summary, results.firstChild);
+  </script>
+</body>
+</html>
