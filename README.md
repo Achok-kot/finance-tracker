@@ -96,7 +96,7 @@ finance-tracker/
 1. **Clone the repository**
    ```bash
    git clone https://github.com/Achok-kot/finance_tracker.git  
-   cd Student_Finance_Tracker
+   cd finance_tracker
    ```
 
 2. **Open in browser**
